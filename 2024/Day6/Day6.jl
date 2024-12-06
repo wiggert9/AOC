@@ -1,4 +1,5 @@
 
+using Base.Threads
 lines = readlines("input")
 
 map = zeros(ComplexF16, size(lines)[1], length(lines[1]))
@@ -100,18 +101,22 @@ function check_if_gets_out(block, currentpos, oldmap)
 end
 
 currentpos, map = process(map)
-@time begin
+
 function count_positions(currentpos,map)
     count=0
     for i in 1:size(map)[1]
-        println(i)
-        for j in 1:size(map)[2]
+        @threads for j in 1:size(map)[2]
             if (i,j) != currentpos
-                count += check_if_gets_out((i,j),currentpos,map)
+                val = check_if_gets_out((i,j),currentpos,map)
+                count+=val
             end
         end
     end
     return count
 end
-end
+
+
+
+@time begin
 count_positions(currentpos,map)
+end
