@@ -1,4 +1,5 @@
 #lines = readlines("testinput")
+using Base.Threads
 lines = readlines("input")
 data = [split(arr, ":") for arr in lines]
 
@@ -61,9 +62,9 @@ function add_one_trinary(array,index)
     return array
 end
 
-
+@time begin
 summ2=0
-for i in 1:length(data)
+@threads for i in 1:length(data)
     global summ2
     operations = zeros(length(elements[i])-1)
     finish = false
@@ -88,5 +89,5 @@ for i in 1:length(data)
         end
     end
 end
-
+end
 println(summ2)
